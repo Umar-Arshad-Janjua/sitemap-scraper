@@ -1,32 +1,16 @@
-/**
- * Cloudflare Workflow for scraping content from sitemap URLs
- * 
- * This workflow fetches a sitemap, extracts URLs, scrapes content from those URLs,
- * converts it to markdown, zips the files, and uploads to R2 storage.
- */
-
 import { WorkflowEntrypoint, WorkflowEvent, WorkflowStep } from 'cloudflare:workers';
 import { zipSync, strToU8 } from 'fflate';
 
-/**
- * Environment variables and bindings required by the worker
- */
 interface Env {
   MY_WORKFLOW: Workflow;
   MY_BUCKET: R2Bucket;
   SCRAPING_API_TOKEN: string;
 }
 
-/**
- * Parameters accepted by the workflow
- */
 interface Params {
   sitemapUrl: string;
 }
 
-/**
- * Main workflow implementation for sitemap scraping
- */
 export class MyWorkflow extends WorkflowEntrypoint<Env, Params> {
   /**
    * Main workflow execution method
@@ -122,7 +106,6 @@ const pageUrls = await step.do(
           out.push({ fileName, content: markdown });
 
           // Add delay between requests to avoid rate limiting
-          // TODO: Make this delay configurable via parameters
           await new Promise(resolve => setTimeout(resolve, 3000));
         }
 
@@ -165,7 +148,6 @@ const pageUrls = await step.do(
     const finalResult = await step.do('Generate Result', async () => {
       try {
         // Generate public download URL for the uploaded zip file
-        // TODO: Consider making the base URL configurable or retrieving it dynamically
         const downloadUrl = `https://pub-afa698db43a7418f8073ed229786891d.r2.dev/${uploadResult.zipName}`;
         return {
           downloadUrl
