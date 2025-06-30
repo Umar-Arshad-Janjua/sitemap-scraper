@@ -1,0 +1,53 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-workflows-app",
+	"main": "src/index.ts",
+	"compatibility_date": "2024-10-22",
+  
+	"observability": {
+	  "enabled": true,
+	  "head_sampling_rate": 1
+	},
+  
+	// ✅ Workflows config
+	"workflows": [
+	  {
+		"name": "sitemap-scraper",
+		"binding": "MY_WORKFLOW",
+		"class_name": "MyWorkflow"
+	  }
+	],
+  
+	// ✅ R2 bucket binding
+	"r2_buckets": [
+	  {
+		"binding": "MY_BUCKET",
+		"bucket_name": "scraped-markdown-zips",
+		"preview_bucket_name": "scraped-markdown-zips"
+	  }
+	]
+  
+	/**
+	 * Smart Placement (optional)
+	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+	 */
+	// "placement": { "mode": "smart" },
+  
+	/**
+	 * Environment Variables (optional)
+	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+	 */
+	// "vars": { "MY_VARIABLE": "production_value" },
+  
+	/**
+	 * Secrets are better for sensitive data
+	 * https://developers.cloudflare.com/workers/configuration/secrets/
+	 */
+  
+	/**
+	 * Static Assets (optional)
+	 * https://developers.cloudflare.com/workers/static-assets/binding/
+	 */
+	// "assets": { "directory": "./public/", "binding": "ASSETS" }
+  }
+  
